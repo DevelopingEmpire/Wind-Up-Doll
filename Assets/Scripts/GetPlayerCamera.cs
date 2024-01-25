@@ -14,10 +14,9 @@ public class GetPlayerCamera : MonoBehaviour
 
         if (thisObject.HasStateAuthority)
         {
-            GameObject virtualCamera = GameObject.Find("PlayerFollowCamera");
-            virtualCamera.GetComponent<CinemachineVirtualCamera>().Follow = playerCameraRoot;
+            GameObject playerCamera = GameObject.Find("PlayerFollowCamera");
 
-            GetComponent<ThirdPersonController>().enabled = true;
+            GetComponent<Player>().enabled = true;
         }
     }
 }
