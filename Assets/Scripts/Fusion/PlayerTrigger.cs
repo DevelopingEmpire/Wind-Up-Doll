@@ -6,7 +6,7 @@ using System.Globalization;
 using StarterAssets;
 using Cinemachine;
 
-public class PlayerTeleport : NetworkBehaviour
+public class PlayerTrigger : NetworkBehaviour
 {
     [SerializeField] NetworkTransform _root;
     bool _isTele = false;
