@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System; // 이벤트 쓰기 위해 가져옴 
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Guards : MonoBehaviour, IGravityControl
 {

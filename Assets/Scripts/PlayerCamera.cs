@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,10 @@ public class PlayerCamera : MonoBehaviour
     public float minY = -60f; // Minimum vertical angle
     public float maxY = 80f; // Maximum vertical angle
 
-    // Start is called before the first frame update
+
+
     void Start()
     {
-        // Optional: Initialize rotationY with the current rotation to prevent jumps in camera angle at start
         Vector3 angles = transform.eulerAngles;
         rotationY = angles.x;
     }

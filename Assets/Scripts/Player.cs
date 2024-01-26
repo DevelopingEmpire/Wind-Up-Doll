@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using Fusion;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -59,6 +61,7 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
+
     /// <summary>
     /// 중력 인터페이스 구현부 
     public bool IsInRange { get; set; }
@@ -87,8 +90,10 @@ public class Player : MonoBehaviour, IGravityControl
         Application.targetFrameRate = 60;
 
         Gravity = -9.81f;
+        NetworkObject thisObject = GetComponent<NetworkObject>();
 
-        controller.detectCollisions = false;
+        if (thisObject.HasStateAuthority)
+            controller.detectCollisions = false;
     }
 
     void Update()
