@@ -15,7 +15,8 @@ public class PlayerTrigger : NetworkBehaviour
     bool _isTele = false;
     bool _isPushBox = false;
     Rigidbody _pushedBody;
-    Vector3 _pushDirection;
+    [Networked] Vector3 _pushDirection;
+
 
     public override void FixedUpdateNetwork()
     {
@@ -28,26 +29,29 @@ public class PlayerTrigger : NetworkBehaviour
         if (_isPushBox && _pushedBody != null)
         {
             _pushedBody.velocity = _pushDirection * pushPower;
-            _isPushBox = false; 
+            _isPushBox = false;
             _rootBox.FixedUpdateNetwork();
         }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        
         if (hit.gameObject.tag == "MoveBox")
         {
             _pushedBody = hit.collider.attachedRigidbody;
-            _rootBox = hit.gameObject.GetComponent<NetworkTransform>();
+            _rootBox = hit.gameObject.GetComponent<NetworkRigidbody>();
             // 박스에 Rigidbody가 없거나, Kinematic이면 무시
             if (_pushedBody == null || _pushedBody.isKinematic)
             {
-                return;
+            return;
             }
             // 박스를 밀어내는 방향 계산
             _pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             _isPushBox = true; // 힘을 적용해야 함을 나타내는 플래그 설정
         }
+         
+
     }
 
     private void OnTriggerEnter(Collider other)
