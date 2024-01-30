@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - TeleBox
   - Item
+  - MoveBox
   layers:
   - Default
   - TransparentFX
