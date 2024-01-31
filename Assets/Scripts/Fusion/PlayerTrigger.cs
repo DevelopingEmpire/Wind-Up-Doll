@@ -55,7 +55,17 @@ public class PlayerTrigger : NetworkBehaviour
                 }
 
 
-                PushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z).normalized;
+                // Determine the dominant direction between x and z
+                if (Mathf.Abs(hit.moveDirection.x) > Mathf.Abs(hit.moveDirection.z))
+                {
+                    // If x is more dominant, set z to 0
+                    PushDirection = new Vector3(hit.moveDirection.x, 0, 0).normalized;
+                }
+                else
+                {
+                    // If z is more dominant or equal, set x to 0
+                    PushDirection = new Vector3(0, 0, hit.moveDirection.z).normalized;
+                }
 
                 _isPushBox = true; // 힘을 적용해야 함을 나타내는 플래그 설정
             }
