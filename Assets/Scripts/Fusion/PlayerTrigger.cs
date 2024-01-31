@@ -9,49 +9,57 @@ using static Fusion.NetworkCharacterController;
 
 public class PlayerTrigger : NetworkBehaviour
 {
+    [SerializeField] NetworkCharacterControllerPrototype characterControllerPrototype;
     [SerializeField] NetworkTransform _root;
     [SerializeField] private float pushPower = 2.0f; // 박스를 밀 때의 힘
     NetworkTransform _rootBox;
     bool _isTele = false;
     bool _isPushBox = false;
     Rigidbody _pushedBody;
-    [Networked] Vector3 _pushDirection;
-
+    [Networked]
+    public Vector3 PushDirection { get; set; }
+    private float _lastHitTime = 0f;
+    private float _hitInterval = 0.1f; // 0.1초 간격으로 OnControllerColliderHit 호출 허용
 
     public override void FixedUpdateNetwork()
     {
+        base.FixedUpdateNetwork();
+
         if (_isTele)
         {
-            _root.TeleportToPosition(GameManager.instance.targetPosition.position);
+            characterControllerPrototype.TeleportToPosition(GameManager.instance.targetPosition.position);
             _isTele = false;
         }
 
         if (_isPushBox && _pushedBody != null)
         {
-            _pushedBody.velocity = _pushDirection * pushPower;
+            _pushedBody.velocity = PushDirection * pushPower;
             _isPushBox = false;
-            _rootBox.FixedUpdateNetwork();
         }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        
-        if (hit.gameObject.tag == "MoveBox")
+        if (Time.time - _lastHitTime > _hitInterval)
         {
-            _pushedBody = hit.collider.attachedRigidbody;
-            _rootBox = hit.gameObject.GetComponent<NetworkRigidbody>();
-            // 박스에 Rigidbody가 없거나, Kinematic이면 무시
-            if (_pushedBody == null || _pushedBody.isKinematic)
-            {
-            return;
-            }
-            // 박스를 밀어내는 방향 계산
-            _pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            _isPushBox = true; // 힘을 적용해야 함을 나타내는 플래그 설정
-        }
-         
+            _lastHitTime = Time.time; // 마지막 호출 시간을 현재 시간으로 업데이트
 
+            if (hit.gameObject.tag == "MoveBox")
+            {
+                _pushedBody = hit.collider.attachedRigidbody;
+                _rootBox = hit.gameObject.GetComponent<NetworkTransform>();
+                // 박스에 Rigidbody가 없거나, Kinematic이면 무시
+                if (_pushedBody == null || _pushedBody.isKinematic)
+                {
+                    return;
+                }
+
+
+                PushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z).normalized;
+
+                _isPushBox = true; // 힘을 적용해야 함을 나타내는 플래그 설정
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -62,6 +70,5 @@ public class PlayerTrigger : NetworkBehaviour
         }
     }
 
-    
-}
 
+}
