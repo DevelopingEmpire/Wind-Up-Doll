@@ -12,10 +12,10 @@ public class PlayerTrigger : NetworkBehaviour
     [SerializeField] NetworkCharacterControllerPrototype characterControllerPrototype;
     [SerializeField] NetworkTransform _root;
     [SerializeField] private float pushPower = 2.0f; // 박스를 밀 때의 힘
-    [SerializeField] NetworkTransform _rootBox;
+    NetworkTransform _rootBox;
     bool _isTele = false;
     bool _isPushBox = false;
-    [SerializeField] public Rigidbody _pushedBody;
+    Rigidbody _pushedBody;
     [Networked]
     public Vector3 PushDirection { get; set; }
     private float _lastHitTime = 0f;
@@ -31,13 +31,10 @@ public class PlayerTrigger : NetworkBehaviour
             _isTele = false;
         }
 
-        if (_isPushBox && _pushedBody != null && _rootBox != null)
+        if (_isPushBox && _pushedBody != null)
         {
-            
-            _pushedBody.AddForce(PushDirection * pushPower); // 여기가 좀 문제가 있다 
+            _pushedBody.velocity = PushDirection * pushPower;
             _isPushBox = false;
-            //_rootBox.FixedUpdateNetwork();
-            _rootBox.TeleportToPosition(GameManager.instance.targetPosition.position);
         }
     }
 

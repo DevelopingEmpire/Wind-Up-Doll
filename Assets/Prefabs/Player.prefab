@@ -1669,9 +1669,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   characterControllerPrototype: {fileID: 4473131979890319793}
-  _root: {fileID: 4473131979890319793}
+  _root: {fileID: 0}
   pushPower: 2
-  _PushDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &19731275501067431
 MonoBehaviour:
   m_ObjectHideFlags: 0
